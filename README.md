@@ -19,8 +19,8 @@ This repository contains a unified training script for predicting molecule prope
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/molecule-property-prediction.git
-    cd molecule-property-prediction
+    git clone git@github.com:CalciumNitrade/QuantumShellNet.git
+    cd QuantumShellNet
     ```
 
 2. Install the required packages:

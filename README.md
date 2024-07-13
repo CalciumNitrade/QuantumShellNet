@@ -28,6 +28,9 @@ This repository contains a unified training script for predicting molecule prope
     ```bash
     pip install -r requirements.txt
     ```
+## Data
+
+You can download the data for elements and molecules from the following link: [QuantumShellNet Data](https://tamucs-my.sharepoint.com/:f:/r/personal/hasan_kurban_tamu_edu/Documents/KIL-OneDrive/Can%20Polat/QuantumShellNet/data?csf=1&web=1&e=fKnD5n)
 
 ## Train
 

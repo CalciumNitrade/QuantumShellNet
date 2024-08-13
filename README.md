@@ -51,17 +51,17 @@ The training script can be executed with various parameters. Below are the avail
 
 #### For Single Elements:
 ```bash
-python train.py --task single_element --data_folder "/path/to/data" --csv_file "/path/to/csv" --root "/path/to/root"
+python train.py --task single_element --data_folder "/path/to/data" --csv_file "/path/to/csv" --save_folder "/path/to/root"
 ```
 
 #### For Molecules:
 ```bash
-python train.py --task molecule --data_folder "/path/to/data" --csv_file "/path/to/csv" --root "/path/to/root"
+python train.py --task molecule --data_folder "/path/to/data" --csv_file "/path/to/csv" --save_folder "/path/to/root"
 ```
 
 #### For Unseen Elements:
 ```bash
-python train.py --task unseen --data_folder "/path/to/data" --csv_file "/path/to/csv" --root "/path/to/root"
+python train.py --task unseen --data_folder "/path/to/data" --csv_file "/path/to/csv" --save_folder "/path/to/root"
 ```
 
 ### Script Details

@@ -35,11 +35,11 @@ def test(model, test_loader, criterion, device):
 
 def main():
     parser = argparse.ArgumentParser(description="Test the AI model for molecule property prediction.")
-    parser.add_argument('--task', type=str, choices=['single_element', 'molecule', 'unseen'], required=True, help='Task type: single_element, molecule, or unseen.')
-    parser.add_argument('--data_folder', type=str, required=True, help='Path to the data folder.')
-    parser.add_argument('--csv_file', type=str, required=True, help='Path to the CSV file.')
+    parser.add_argument('--task', default='unseen',type=str, choices=['single_element', 'molecule', 'unseen'], required=True, help='Task type: single_element, molecule, or unseen.')
+    parser.add_argument('--data_folder', default='test_data', type=str, required=True, help='Path to the data folder.')
+    parser.add_argument('--csv_file', default='molecule_info.csv',type=str, required=True, help='Path to the CSV file.')
     parser.add_argument('--batch_size', type=int, default=64, help='Batch size for data loaders.')
-    parser.add_argument('--root', type=str, required=True, help='Root directory for saved models.')
+    parser.add_argument('--load_folder', default='results',type=str, required=True, help='Root directory for saved models.')
     parser.add_argument('--seed_start', type=int, default=5, help='Start seed value.')
     parser.add_argument('--seed_end', type=int, default=26, help='End seed value.')
     parser.add_argument('--seed_step', type=int, default=5, help='Step size for seed values.')
@@ -51,7 +51,7 @@ def main():
 
     custom_transforms = transforms.Compose([transforms.ToTensor()])
 
-    test_dataset = OrbitalDataloader(f"{args.data_folder}/test", args.csv_file, args.task, transform=custom_transforms)
+    test_dataset = OrbitalDataloader(f"{args.data_folder}", args.csv_file, args.task, transform=custom_transforms)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, generator=torch.Generator().manual_seed(args.seed_start))
 
     model_vs_avg_test_loss = {}
@@ -62,7 +62,7 @@ def main():
         np.random.seed(seed)
 
         model = QuantumShellNet()
-        chkpt_path = f'{args.root}/{args.task}_{seed}/model.pth'
+        chkpt_path = f'{args.root}/unseen/{args.task}_{seed}/model.pth'
         model.load_state_dict(torch.load(chkpt_path))
         model.to(device)
 

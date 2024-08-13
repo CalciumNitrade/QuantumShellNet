@@ -63,13 +63,13 @@ def validate(model, val_loader, criterion, device):
 
 def main():
     parser = argparse.ArgumentParser(description="Train and validate the AI model for molecule property prediction.")
-    parser.add_argument('--task', type=str, choices=['single_element', 'molecule', 'unseen'], required=True, help='Task type: single_element, molecule, or unseen.')
-    parser.add_argument('--data_folder', type=str, required=True, help='Path to the data folder.')
-    parser.add_argument('--csv_file', type=str, required=True, help='Path to the CSV file.')
+    parser.add_argument('--task', default='unseen', type=str, choices=['single_element', 'molecule', 'unseen'], required=True, help='Task type: single_element, molecule, or unseen.')
+    parser.add_argument('--data_folder', default='data', type=str, required=True, help='Path to the data folder.')
+    parser.add_argument('--csv_file',default='molecule_info.csv', type=str, required=True, help='Path to the CSV file.')
     parser.add_argument('--num_epochs', type=int, default=100, help='Number of training epochs.')
     parser.add_argument('--learning_rate', type=float, default=0.01, help='Learning rate for the optimizer.')
     parser.add_argument('--batch_size', type=int, default=1, help='Batch size for data loaders.')
-    parser.add_argument('--root', type=str, required=True, help='Root directory for saving results.')
+    parser.add_argument('--save_folder', default='results', type=str, required=True, help='Root directory for saving results.')
     parser.add_argument('--seed_start', type=int, default=5, help='Start seed value.')
     parser.add_argument('--seed_end', type=int, default=26, help='End seed value.')
     parser.add_argument('--seed_step', type=int, default=5, help='Step size for seed values.')
@@ -80,7 +80,7 @@ def main():
     print(f"Using device: {device}")
 
     if args.task == 'single_element':
-        items = ['b', 'c', 'n', 'o', 'f', 'ne']
+        items = ['h', 'he', 'li', 'be', 'b', 'c', 'n', 'o', 'f', 'ne']
     elif args.task == 'molecule':
         items = ['li_h', 'li_li', 'n_n', 'c_o']
     else:
@@ -118,7 +118,6 @@ def main():
 
             train_loss = []
             val_loss = []
-            model_pred_list = []
             fold_duration = []
             fold_start_time = time.time()
 
@@ -131,20 +130,20 @@ def main():
                 print(f"Train Loss: {train_epoch_loss:.4f}, Validation Loss: {val_epoch_loss:.4f}")
                 print(f"Train RMSE: {np.sqrt(train_epoch_loss):.4f}, Validation RMSE: {np.sqrt(val_epoch_loss):.4f}")
 
-                ablation_path = f"{item}/{args.task}_{seed}"
-                if not os.path.exists(f'{args.root}/{ablation_path}'):
-                    os.makedirs(f'{args.root}/{ablation_path}')
+                task_seed_path = f"{item}/{args.task}_{seed}"
+                if not os.path.exists(f'{args.root}/{task_seed_path}'):
+                    os.makedirs(f'{args.root}/{task_seed_path}')
 
-                np.savetxt(f'{args.root}/{ablation_path}/train_loss.txt', train_loss)
-                np.savetxt(f'{args.root}/{ablation_path}/val_loss.txt', val_loss)
+                np.savetxt(f'{args.root}/{task_seed_path}/train_loss.txt', train_loss)
+                np.savetxt(f'{args.root}/{task_seed_path}/val_loss.txt', val_loss)
 
                 if val_epoch_loss <= min(val_loss):
-                    torch.save(model.state_dict(), f"{args.root}/{ablation_path}/model.pth")
+                    torch.save(model.state_dict(), f"{args.root}/{task_seed_path}/model.pth")
                     print("Saved best model weights!")
 
             fold_end_time = time.time()
             fold_duration.append(fold_end_time - fold_start_time)
-            np.savetxt(f'{args.root}/{ablation_path}/train_duration.txt', fold_duration)
+            np.savetxt(f'{args.root}/{task_seed_path}/train_duration.txt', fold_duration)
 
 
 if __name__ == "__main__":
